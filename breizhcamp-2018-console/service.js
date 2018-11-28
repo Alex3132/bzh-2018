@@ -1,3 +1,4 @@
+var request = require('request')
 // tableau qui contiendra toutes les sessions du BreizhCamp
 var talks = [];
 
