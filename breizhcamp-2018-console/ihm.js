@@ -1,32 +1,51 @@
-var service = require('./service');
-var readline = require('readline');
+const Service = require('./service');
+const readline = require('readline');
+
+const service = new Service();
 
 //Initialisation
-exports.start = function() {
+module.exports = class Ihm {
 
-        service.init(function(nb) {
-             console.log('[init]', nb, 'sessions trouvées.')
-         });
-         var rl = readline.createInterface({
+        const $promise = service.init()
+
+        const $speakers = service.getSpeakers()
+        // version promesse
+        $promise.then( nb => {
+            console.log('[init]', nb, 'sessions trouvées.')
+        })
+        
+         let rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout
         });
-        
-            rl.question('*************************\r\n'+'1. Rafraichir les données\r\n'+ '2. Lister les sessions\r\n'+'99. Quitter\r\n', function(saisie) {
+        let questions= `*************************
+        1. Rafraichir les données
+        2. Lister les sessions 
+        3. Lister les présentateurs 
+        99. Quitter
+        `;
+            rl.question(questions, saisie => {
                 console.log(`Vous avez saisi : ${saisie}`);
                 switch (saisie){
                     case "1": 
-                    service.init(function(nb) {
+
+                    // version callback
+                    $promise.then(nb => {
                         console.log('[init]', nb, 'sessions trouvées.')
                     });
                     console.log("Données à jour.....");
                     break;
                     case "2":
-                    service.listerSessions(function(sessions){
+                    service.listerSessions().then(sessions =>{
                         sessions.forEach(session => {
                             console.log(session.name,"("+session.speakers+")");
                         });
                     });
+                    break;
+                    case "3":
+                   $speakers.then(speakers => { 
+                        speakers.forEach(s=>console.log(s.innerHTML)) 
+                    })
                     break;
                     case "99":
                     break;
@@ -39,10 +58,3 @@ exports.start = function() {
 
 
         }
-// var service = require('./service');
-
-// exports.start = function() {
-//     service.init(function(nb) {
-//         console.log('[init]', nb, 'sessions trouvées.')
-//     });
-// };
