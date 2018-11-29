@@ -4,7 +4,7 @@ const readline = require('readline');
 const service = new Service();
 
 //Initialisation
-module.exports = class Ihm {
+exports.start = function() {
 
         const $promise = service.init()
 
@@ -14,7 +14,7 @@ module.exports = class Ihm {
             console.log('[init]', nb, 'sessions trouvées.')
         })
         
-         let rl = readline.createInterface({
+         var rl = readline.createInterface({
             input: process.stdin,
             output: process.stdout
         });
